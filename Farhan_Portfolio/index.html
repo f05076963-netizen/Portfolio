@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farhan Alam - AI-Powered Data Scientist & Engineer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Marked.js for markdown parsing in chat -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#1e293b', 900: '#0f172a' },
+                        teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' } 
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container { 
+            position: relative; 
+            width: 100%; 
+            max-width: 100%; 
+            height: 300px; 
+            max-height: 400px; 
+        }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .dark ::-webkit-scrollbar-track { background: #0f172a; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .dark .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Chat Widget Animations */
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .chat-animate { animation: slideIn 0.3s ease-out forwards; }
+        
+        .gemini-gradient {
+            background: linear-gradient(135deg, #2dd4bf 0%, #0ea5e9 100%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 transition-colors duration-300">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 glass-card border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-teal-500 rounded-lg flex items-center justify-center text-white font-bold font-display text-lg">FA</div>
+                    <span class="text-xl font-bold font-display text-slate-800 dark:text-white">Farhan<span class="text-teal-500">.AI</span></span>
+                </div>
+                
+                <div class="hidden md:flex space-x-8 items-center">
+                    <button onclick="scrollToSection('hero')" class="hover:text-teal-500 transition font-medium text-sm">Overview</button>
+                    <button onclick="scrollToSection('skills')" class="hover:text-teal-500 transition font-medium text-sm">Tech Stack</button>
+                    <button onclick="scrollToSection('recruiter-zone')" class="hover:text-teal-500 transition font-medium text-sm text-teal-600 dark:text-teal-400 font-bold">Recruiter Zone</button>
+                    <button onclick="scrollToSection('research')" class="hover:text-teal-500 transition font-medium text-sm">Research</button>
+                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition text-xl">
+                        &#9728;
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-4 md:hidden">
+                    <button onclick="toggleTheme()" class="p-2 text-xl">&#9728;</button>
+                    <button onclick="toggleMobileMenu()" class="text-2xl font-bold text-teal-600">&#9776;</button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 absolute w-full left-0 shadow-lg">
+             <button onclick="scrollToSection('hero')" class="block w-full text-left px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-800">Overview</button>
+             <button onclick="scrollToSection('skills')" class="block w-full text-left px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-800">Tech Stack</button>
+             <button onclick="scrollToSection('recruiter-zone')" class="block w-full text-left px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 font-bold text-teal-500">Recruiter Zone</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-12 pb-20 overflow-hidden">
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl dark:bg-teal-500/20"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-72 h-72 bg-sky-500/10 rounded-full blur-3xl dark:bg-sky-500/20"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-16 items-center">
+                
+                <!-- Photo Column -->
+                <div class="lg:col-span-5 mb-10 lg:mb-0 flex justify-center lg:justify-end order-1 lg:order-2">
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-teal-500 to-sky-500 rounded-full opacity-75 group-hover:opacity-100 transition duration-500 blur"></div>
+                        
+                        <!-- UPDATED IMAGE SECTION: With File Picker -->
+                        <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full border-4 border-white dark:border-slate-800 shadow-2xl overflow-hidden bg-slate-200 dark:bg-slate-800 group-hover:scale-[1.02] transition-transform">
+                            <img id="profile-image" 
+                                 src="./farhan_profile.png" 
+                                 alt="Farhan Alam Profile" 
+                                 class="w-full h-full object-cover"
+                                 onerror="this.src='https://placehold.co/400x400/1e293b/ffffff?text=Upload+Photo'">
+                            
+                            <!-- Upload Overlay (Visible on Hover or Error) -->
+                            <label for="photo-upload" class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity duration-300">
+                                <span class="text-3xl">📷</span>
+                                <span class="text-white text-xs font-bold mt-2 uppercase tracking-wide">Change Photo</span>
+                            </label>
+                            <input type="file" id="photo-upload" class="hidden" accept="image/*" onchange="loadProfileImage(event)">
+                        </div>
+                        
+                        <!-- Floating Badge -->
+                        <div class="absolute bottom-4 right-4 bg-white dark:bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700 flex items-center gap-3 animate-bounce" style="animation-duration: 3s;">
+                            <div class="text-2xl">🧬</div>
+                            <div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Focus</div>
+                                <div class="text-sm font-bold text-slate-800 dark:text-white">Bioinformatics</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Column -->
+                <div class="lg:col-span-7 order-2 lg:order-1 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 text-xs font-semibold tracking-wide uppercase mb-6">
+                        <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                        AI Integrated Portfolio
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold font-display tracking-tight text-slate-900 dark:text-white mb-6">
+                        Hi, I'm Farhan. <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-sky-600 typing-cursor" id="typing-text"></span>
+                    </h1>
+                    
+                    <!-- NEW: Digital Persona Generator -->
+                    <div class="mb-6 relative">
+                        <p id="bio-text" class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto lg:mx-0 leading-relaxed transition-all duration-500">
+                            Merging <strong>Software Engineering</strong> with <strong>Data Science</strong>. Researching data-driven solutions at Daffodil International University, with a keen interest in genetics.
+                        </p>
+                        <button onclick="generateDigitalPersona()" class="absolute -top-6 right-0 lg:right-auto lg:left-0 bg-slate-100 dark:bg-slate-800 hover:bg-teal-100 dark:hover:bg-teal-900 text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 transition flex items-center gap-1">
+                            <span>🤖 Describe Digitally</span>
+                        </button>
+                    </div>
+
+                    <!-- NEW: Want to know about Farhan? (Quick Ask) -->
+                    <div class="mb-8">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Want to know about Farhan?</p>
+                        <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                            <button onclick="triggerQuickAsk('What is Farhan\'s research focus?')" class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-600 dark:text-slate-300 hover:border-teal-400 hover:text-teal-500 transition shadow-sm">
+                                🔬 Research Focus?
+                            </button>
+                            <button onclick="triggerQuickAsk('Why should I hire Farhan?')" class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-600 dark:text-slate-300 hover:border-teal-400 hover:text-teal-500 transition shadow-sm">
+                                💼 Why Hire Him?
+                            </button>
+                            <button onclick="triggerQuickAsk('Tell me a fun fact about his skills.')" class="px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm text-slate-600 dark:text-slate-300 hover:border-teal-400 hover:text-teal-500 transition shadow-sm">
+                                ⚡ Skill Fact?
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row flex-wrap gap-4 justify-center lg:justify-start">
+                        <a href="mailto:alam22205341122@diu.edu.bd" class="px-8 py-3.5 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:opacity-90 transition shadow-lg transform hover:-translate-y-1">
+                            Contact Me
+                        </a>
+                        <button onclick="generateElevatorPitch()" class="px-8 py-3.5 rounded-lg border border-teal-500 text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition font-medium flex items-center gap-2 justify-center">
+                            <span>✨ Generate Elevator Pitch</span>
+                        </button>
+                    </div>
+                    
+                    <div id="elevator-pitch-output" class="hidden mt-6 p-4 rounded-xl bg-teal-50/50 dark:bg-teal-900/10 border border-teal-100 dark:border-teal-800 text-left text-sm text-slate-700 dark:text-slate-300"></div>
+
+                    <!-- Stats Strip -->
+                    <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 grid grid-cols-3 gap-8">
+                        <div>
+                            <div class="text-3xl font-bold font-display text-teal-600 dark:text-teal-400">3.06</div>
+                            <div class="text-sm text-slate-500 dark:text-slate-400">CGPA (B.Sc)</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold font-display text-sky-600 dark:text-sky-400">4+</div>
+                            <div class="text-sm text-slate-500 dark:text-slate-400">Certifications</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-bold font-display text-indigo-600 dark:text-indigo-400">2+</div>
+                            <div class="text-sm text-slate-500 dark:text-slate-400">Years Research</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack / Skills Section -->
+    <section id="skills" class="py-20 bg-white dark:bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold font-display mb-4">Technical Arsenal</h2>
+                <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-6">
+                    A balanced mix of data analysis tools and robust software engineering technologies.
+                </p>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap justify-center gap-4">
+                    <button onclick="generateProjectIdea()" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 px-6 py-2 rounded-full font-bold shadow-sm hover:shadow-md hover:border-teal-500 transition flex items-center gap-2">
+                        <span>💡 Project Ideas</span>
+                    </button>
+                    
+                    <!-- NEW: Skill Superpower Button -->
+                    <button onclick="revealSkillSuperpower()" class="gemini-gradient text-white px-6 py-2 rounded-full font-bold shadow-lg hover:shadow-xl hover:scale-105 transition transform flex items-center gap-2">
+                        <span>✨ Reveal a Skill Superpower</span>
+                    </button>
+                </div>
+
+                <!-- AI Output Containers -->
+                <div id="project-idea-output" class="hidden max-w-2xl mx-auto mt-6 p-6 rounded-2xl bg-white dark:bg-slate-800 border-2 border-teal-500 shadow-2xl text-left relative">
+                    <button onclick="this.parentElement.classList.add('hidden')" class="absolute top-2 right-4 text-slate-400 hover:text-red-500">✕</button>
+                    <h4 class="font-bold text-teal-600 dark:text-teal-400 mb-2 text-lg">AI Suggested Project:</h4>
+                    <div id="project-content" class="prose dark:prose-invert text-sm"></div>
+                </div>
+
+                <div id="skill-superpower-output" class="hidden max-w-2xl mx-auto mt-6 p-6 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-2xl text-left relative animate-pulse-slow">
+                    <button onclick="this.parentElement.classList.add('hidden')" class="absolute top-2 right-4 text-white/70 hover:text-white">✕</button>
+                    <div class="flex items-start gap-4">
+                        <div class="text-4xl">⚡</div>
+                        <div>
+                            <h4 class="font-bold text-white mb-1 text-lg">Skill Highlight: <span id="highlighted-skill-name" class="text-yellow-300"></span></h4>
+                            <p id="skill-superpower-text" class="text-sm text-indigo-100 italic"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Data Science Stack (Left) -->
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-teal-500">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-3 bg-teal-100 dark:bg-teal-900/50 rounded-lg text-teal-600 dark:text-teal-400 text-2xl">📊</div>
+                        <h3 class="text-2xl font-bold font-display">Data Science</h3>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">Python (Pandas/NumPy)</span>
+                                <span class="text-teal-600 dark:text-teal-400">80%</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-teal-500 rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">R Language</span>
+                                <span class="text-teal-600 dark:text-teal-400">60%</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-teal-500 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium">MySQL / Database</span>
+                                <span class="text-teal-600 dark:text-teal-400">75%</span>
+                            </div>
+                            <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div class="h-full bg-teal-500 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engineering Stack (Right) -->
+                <div class="glass-card p-8 rounded-2xl border-l-4 border-sky-500">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="p-3 bg-sky-100 dark:bg-sky-900/50 rounded-lg text-sky-600 dark:text-sky-400 text-2xl">💻</div>
+                        <h3 class="text-2xl font-bold font-display">Engineering</h3>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-center hover:shadow-md transition">
+                            <div class="font-bold text-lg mb-1">Java</div>
+                            <div class="text-xs text-slate-500 uppercase">Core Logic</div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-center hover:shadow-md transition">
+                            <div class="font-bold text-lg mb-1">PHP</div>
+                            <div class="text-xs text-slate-500 uppercase">Backend</div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-center hover:shadow-md transition">
+                            <div class="font-bold text-lg mb-1">HTML/CSS</div>
+                            <div class="text-xs text-slate-500 uppercase">Frontend</div>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl text-center hover:shadow-md transition">
+                            <div class="font-bold text-lg mb-1">AWS</div>
+                            <div class="text-xs text-slate-500 uppercase">Cloud Basics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Skill Radar -->
+            <div class="mt-12 max-w-2xl mx-auto">
+                <div class="chart-container">
+                    <canvas id="skillsRadar"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RECRUITER ZONE -->
+    <section id="recruiter-zone" class="py-20 bg-slate-100 dark:bg-slate-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-2xl border border-teal-500/30">
+                <div class="text-center mb-8">
+                    <div class="inline-block p-3 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-400 text-3xl mb-4">🤖</div>
+                    <h2 class="text-3xl font-bold font-display mb-2">AI Recruiter Zone</h2>
+                    <p class="text-slate-500 dark:text-slate-400">
+                        Paste a Job Description below to instantly analyze how well Farhan fits your role.
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <textarea id="jd-input" rows="6" class="w-full p-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition" placeholder="Paste Job Description here..."></textarea>
+                    <button onclick="analyzeJobMatch()" class="w-full py-4 rounded-xl gemini-gradient text-white font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition transform flex items-center justify-center gap-2">
+                        <span>✨ Analyze Match Score</span>
+                    </button>
+                </div>
+                <div id="match-result" class="hidden mt-8 p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research & Projects -->
+    <section id="research" class="py-20 bg-slate-50 dark:bg-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold font-display mb-12 text-center">Research & Involvement</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-slate-100 dark:border-slate-700 flex flex-col">
+                    <div class="h-40 bg-gradient-to-br from-teal-400 to-emerald-600 rounded-xl mb-6 flex items-center justify-center text-white text-5xl">🧬</div>
+                    <div class="text-xs font-bold text-teal-600 dark:text-teal-400 uppercase tracking-wider mb-2">Bioinformatics</div>
+                    <h3 class="text-xl font-bold mb-3">Cancer Genetics & Precision Medicine</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 flex-grow">
+                        Attended international seminar organized by the Dept. of Pharmacy. Exploring the intersection of genetic data analysis and personalized healthcare.
+                    </p>
+                    <button onclick="simplifyResearch(this)" class="mt-4 w-full py-2 rounded-lg border border-teal-200 dark:border-teal-800 text-teal-600 dark:text-teal-400 text-sm font-semibold hover:bg-teal-50 dark:hover:bg-teal-900/30 transition flex items-center justify-center gap-2">
+                        <span>✨ Explain Simply (ELI5)</span>
+                    </button>
+                    <div class="research-explanation hidden mt-3 text-xs bg-teal-50 dark:bg-slate-900 p-3 rounded-lg text-slate-600 dark:text-slate-300 border border-teal-100 dark:border-slate-700"></div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-slate-100 dark:border-slate-700">
+                    <div class="h-40 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl mb-6 flex items-center justify-center text-white text-5xl">👥</div>
+                    <div class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider mb-2">Leadership</div>
+                    <h3 class="text-xl font-bold mb-3">Data Science Club Member</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                        Active member (2022-2026) facilitating workshops, peer learning sessions, and collaborative projects within the university's tech community.
+                    </p>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-slate-100 dark:border-slate-700">
+                    <div class="h-40 bg-gradient-to-br from-orange-400 to-amber-500 rounded-xl mb-6 flex items-center justify-center text-white text-5xl">🎓</div>
+                    <div class="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mb-2">Continuous Learning</div>
+                    <h3 class="text-xl font-bold mb-3">Professional Certifications</h3>
+                    <ul class="text-slate-600 dark:text-slate-400 text-sm space-y-2">
+                        <li class="flex items-center gap-2">✓ AWS Cloud Fundamentals (2 Courses)</li>
+                        <li class="flex items-center gap-2">✓ Coursera Data Specializations (2 Courses)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Chart Section -->
+    <section id="education" class="py-20 bg-white dark:bg-slate-900">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center gap-12">
+                <div class="md:w-1/3">
+                    <h2 class="text-3xl font-bold font-display mb-4">Academic Consistency</h2>
+                    <p class="text-slate-600 dark:text-slate-400 mb-6">
+                        Maintained a strong academic record from O Levels to B.Sc.
+                    </p>
+                    <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-lg border-l-4 border-teal-500">
+                        <div class="font-bold text-xl text-slate-800 dark:text-white">3.06 / 4.00</div>
+                        <div class="text-sm text-slate-500">Current CGPA (Software Engineering)</div>
+                    </div>
+                </div>
+                <div class="md:w-2/3 w-full">
+                    <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-inner">
+                        <div class="chart-container">
+                            <canvas id="academicChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-600">
+            &copy; 2025 Farhan Alam. Powered by Gemini API.
+        </div>
+    </footer>
+
+    <!-- Chat Widget -->
+    <div id="chat-widget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chat-window" class="hidden w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden mb-4 transition-all origin-bottom-right">
+            <div class="bg-gradient-to-r from-teal-500 to-sky-600 p-4 flex justify-between items-center text-white">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">✨</span>
+                    <h3 class="font-bold">Ask Farhan's AI</h3>
+                </div>
+                <button onclick="toggleChat()" class="text-white hover:text-slate-200">✕</button>
+            </div>
+            <div id="chat-messages" class="h-80 overflow-y-auto p-4 space-y-3 bg-slate-50 dark:bg-slate-900/50">
+                <div class="flex justify-start">
+                    <div class="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-2xl rounded-tl-none p-3 text-sm shadow-sm max-w-[85%]">
+                        Hello! I am an AI trained on Farhan's CV. Ask me about his skills, research, or experience!
+                    </div>
+                </div>
+            </div>
+            <div class="p-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask a question..." class="flex-1 bg-slate-100 dark:bg-slate-900 border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none" onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()" class="bg-teal-500 hover:bg-teal-600 text-white p-2 rounded-full w-10 h-10 flex items-center justify-center transition">
+                    ➤
+                </button>
+            </div>
+        </div>
+        <button onclick="toggleChat()" class="gemini-gradient text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl hover:scale-110 transition duration-300 animate-pulse-slow">
+            ✨
+        </button>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const apiKey = "AIzaSyAv18Yr3_DpVceSj7JU6z4P0Szfuu181lo"; // API Key Preserved
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // --- NEW: HANDLE IMAGE UPLOAD ---
+        function loadProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-image').src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Resume Context
+        const farhanContext = `
+        You are an AI assistant for Farhan Alam. Use this resume context to answer questions:
+        Name: Farhan Alam
+        Role: Aspiring Data Scientist & Software Engineer
+        Education: B.Sc in Software Engineering at Daffodil International University (Ongoing, CGPA 3.06/4.00). A Levels (GPA 4.00), O Levels (GPA 3.67).
+        Skills: Python (Pandas/NumPy), R, SQL, Java, PHP, AWS Cloud, MS Office.
+        Soft Skills: Organization, Punctuality, Teamwork, English, Bangla.
+        Research: Involved in research since 2022. Interest in Cancer Genetics & Precision Medicine.
+        Experience: Active Member of Data Science Club & SE Club (2022-2026).
+        Location: Dhaka, Bangladesh.
+        Goal: Seeking position in reputable software company.
+        Be professional, concise, and enthusiastic. Use the first person "I" sometimes if asked about personal views, or refer to him as Farhan.
+        `;
+
+        // --- GEMINI API HELPER ---
+        async function callGemini(prompt, systemInstruction = "") {
+            if (!apiKey) {
+                alert("Please add your Google Gemini API Key in the code to use AI features!");
+                return null;
+            }
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            };
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response.";
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                return "Error connecting to AI service.";
+            }
+        }
+
+        // --- NEW: DIGITAL PERSONA GENERATOR ---
+        async function generateDigitalPersona() {
+            const bioText = document.getElementById('bio-text');
+            bioText.innerHTML = '<span class="animate-pulse text-teal-500">🤖 AI is generating a cyber-persona...</span>';
+            const prompt = "Rewrite Farhan Alam's bio as a 'Cyber-Protagonist' character description for a sci-fi tech world. Mention his dual mastery of Code and Data. Keep it under 2 sentences.";
+            const response = await callGemini(prompt, farhanContext);
+            bioText.innerHTML = `<span class="font-mono text-teal-600 dark:text-teal-400">>> SYSTEM LOG: </span> ${response}`;
+        }
+
+        // --- NEW: QUICK ASK ---
+        function triggerQuickAsk(question) {
+            // Open Chat if closed
+            const chatWindow = document.getElementById('chat-window');
+            if (chatWindow.classList.contains('hidden')) {
+                toggleChat();
+            }
+            // Populate Input and Send
+            const input = document.getElementById('chat-input');
+            input.value = question;
+            sendMessage();
+        }
+
+        // --- NEW: SKILL SUPERPOWER REVEAL ---
+        const skillsList = ["Python", "Bioinformatics", "SQL", "Java", "R Language", "AWS Cloud"];
+        async function revealSkillSuperpower() {
+            const outputDiv = document.getElementById('skill-superpower-output');
+            const nameSpan = document.getElementById('highlighted-skill-name');
+            const textP = document.getElementById('skill-superpower-text');
+            
+            outputDiv.classList.remove('hidden');
+            // Pick Random Skill
+            const randomSkill = skillsList[Math.floor(Math.random() * skillsList.length)];
+            nameSpan.textContent = randomSkill;
+            textP.innerHTML = '<span class="animate-pulse">Analyzing power level...</span>';
+
+            const prompt = `Explain why '${randomSkill}' is a 'superpower' for a Data Scientist/Engineer like Farhan in the modern tech world. Make it sound fascinating and powerful. 1 short sentence.`;
+            const response = await callGemini(prompt, farhanContext);
+            
+            textP.innerHTML = `"${response}"`;
+        }
+
+        // --- EXISTING FEATURES ---
+        async function analyzeJobMatch() {
+            const jdInput = document.getElementById('jd-input').value.trim();
+            const resultDiv = document.getElementById('match-result');
+            if (!jdInput) { alert("Please paste a Job Description first!"); return; }
+            resultDiv.classList.remove('hidden');
+            resultDiv.innerHTML = '<div class="animate-pulse flex items-center justify-center text-teal-600 gap-2"><span class="text-xl">⚙️</span> Analyzing resume compatibility...</div>';
+            const prompt = `Act as a Recruiter. Compare Farhan's profile to this JD: "${jdInput}". Give Match Score %, 3 strengths, 1 gap. Markdown format.`;
+            const response = await callGemini(prompt, farhanContext);
+            resultDiv.innerHTML = `<div class="prose dark:prose-invert max-w-none">${marked.parse(response)}</div>`;
+        }
+
+        async function simplifyResearch(btn) {
+            const div = btn.nextElementSibling;
+            div.classList.remove('hidden');
+            div.innerHTML = '<span class="animate-pulse">Simplifying...</span>';
+            const prompt = "Explain 'Cancer Genetics & Precision Medicine' simply for a 5-year-old. 1 sentence.";
+            const response = await callGemini(prompt);
+            div.innerHTML = `<strong>💡 Simply put:</strong> ${response}`;
+            btn.classList.add('hidden');
+        }
+
+        function toggleChat() { document.getElementById('chat-window').classList.toggle('hidden'); }
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const userText = input.value.trim();
+            if (!userText) return;
+            messages.innerHTML += `<div class="flex justify-end chat-animate"><div class="bg-teal-500 text-white rounded-2xl rounded-tr-none p-3 text-sm shadow-sm max-w-[85%]">${userText}</div></div>`;
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+            const loadingId = 'loading-' + Date.now();
+            messages.innerHTML += `<div id="${loadingId}" class="flex justify-start chat-animate"><div class="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-2xl rounded-tl-none p-3 text-sm shadow-sm text-slate-500">Thinking...</div></div>`;
+            messages.scrollTop = messages.scrollHeight;
+            const reply = await callGemini(userText, farhanContext);
+            document.getElementById(loadingId).remove();
+            messages.innerHTML += `<div class="flex justify-start chat-animate"><div class="bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-2xl rounded-tl-none p-3 text-sm shadow-sm max-w-[85%] prose dark:prose-invert">${marked.parse(reply)}</div></div>`;
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        async function generateProjectIdea() {
+            const output = document.getElementById('project-idea-output');
+            const content = document.getElementById('project-content');
+            output.classList.remove('hidden');
+            content.innerHTML = '<span class="animate-pulse">Consulting AI...</span>';
+            const prompt = "Generate a unique Data Science project idea combining Python, R, MySQL, and Bioinformatics. Explain What, Why, Tech Stack.";
+            const response = await callGemini(prompt, "You are a tech mentor.");
+            content.innerHTML = marked.parse(response);
+        }
+
+        async function generateElevatorPitch() {
+            const output = document.getElementById('elevator-pitch-output');
+            output.classList.remove('hidden');
+            output.innerHTML = '<span class="animate-pulse">Drafting pitch...</span>';
+            const prompt = "Write a 2-sentence Elevator Pitch for Farhan to a recruiter for a Junior Data Scientist role.";
+            const response = await callGemini(prompt, farhanContext);
+            output.innerHTML = `<strong>AI Generated Pitch:</strong><br>"${response}"`;
+        }
+
+        // --- UI UTILS ---
+        function toggleTheme() { document.documentElement.classList.toggle('dark'); }
+        function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); document.getElementById('mobile-menu').classList.add('hidden'); }
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        
+        // Typing Effect
+        const texts = ["Aspiring Data Scientist", "Software Engineer", "Researcher"];
+        let count = 0, index = 0, currentText = "", letter = "";
+        (function type() {
+            if (count === texts.length) count = 0;
+            currentText = texts[count];
+            letter = currentText.slice(0, ++index);
+            document.getElementById('typing-text').textContent = letter;
+            if (letter.length === currentText.length) { count++; index = 0; setTimeout(type, 2000); } else { setTimeout(type, 100); }
+        })();
+
+        // Charts
+        new Chart(document.getElementById('skillsRadar').getContext('2d'), {
+            type: 'radar',
+            data: {
+                labels: ['Coding', 'Data Analysis', 'Tools', 'Soft Skills', 'Research', 'Languages'],
+                datasets: [{ label: 'Proficiency', data: [85, 75, 90, 92, 70, 95], fill: true, backgroundColor: 'rgba(20, 184, 166, 0.2)', borderColor: 'rgba(20, 184, 166, 1)', pointBackgroundColor: 'rgba(20, 184, 166, 1)' }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: 'rgba(148, 163, 184, 0.2)' }, grid: { color: 'rgba(148, 163, 184, 0.2)' }, pointLabels: { font: { size: 12 }, color: '#64748b' }, suggestedMin: 0, suggestedMax: 100, ticks: { display: false } } }, plugins: { legend: { display: false } } }
+        });
+        new Chart(document.getElementById('academicChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['O Levels', 'A Levels', 'B.Sc'],
+                datasets: [{ label: 'Score (%)', data: [73.4, 80.0, 76.5], backgroundColor: ['rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.7)', 'rgba(20, 184, 166, 0.8)'], borderRadius: 6 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(148, 163, 184, 0.1)' } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>
